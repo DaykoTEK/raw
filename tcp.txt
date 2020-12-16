@@ -59,7 +59,7 @@
 				echo json_encode(array("stop" => $sonlandircommand));
 
 				shell_exec($command);
-
+				//gum
 				//sleep($sure);
 				//shell_exec($sonlandircommand);
 
